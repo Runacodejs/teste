@@ -203,7 +203,7 @@
     <section class="banner">
       <h2>Vingadores: Guerra Infinita</h2>
       <p>Os heróis mais poderosos da Terra enfrentam o maior vilão do universo.</p>
-      <button class="btn">▶ Assistir Agora</button>
+      <button class="btn" id="assistirAgoraBtn">▶ Assistir Agora</button>
     </section>
 
     <section class="filmes">
@@ -216,6 +216,7 @@
     © 2025 CineFlix — Feito com ❤️ por Você 🎬
   </footer>
 
+  <script src="api.js"></script>
   <script>
     const filmes = [
       { titulo: "Vingadores: Ultimato", img: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
@@ -232,6 +233,7 @@
 
     const catalogo = document.getElementById("catalogo");
     const searchInput = document.getElementById("searchInput");
+    const assistirAgoraBtn = document.getElementById("assistirAgoraBtn");
 
     function renderFilmes(lista) {
       catalogo.innerHTML = "";
@@ -257,6 +259,12 @@
       );
       renderFilmes(filtrados);
     });
+
+    assistirAgoraBtn.addEventListener("click", () => {
+      // Exemplo com o ID de "Vingadores: Guerra Infinita" (movie/299536)
+      getStreamingAvailability('movie/299536');
+    });
+
   </script>
 </body>
 </html>
