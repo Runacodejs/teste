@@ -218,50 +218,41 @@
 
   <script src="api.js"></script>
   <script>
-    const filmes = [
-      { titulo: "Vingadores: Ultimato", img: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
-      { titulo: "Homem-Aranha: Sem Volta Para Casa", img: "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg" },
-      { titulo: "Interestelar", img: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg" },
-      { titulo: "Matrix", img: "https://image.tmdb.org/t/p/w500/aOiL1y03ZL0pQzGwdr7E52S4kvc.jpg" },
-      { titulo: "O Senhor dos Anéis", img: "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg" },
-      { titulo: "Pantera Negra", img: "https://image.tmdb.org/t/p/w500/uxzzxijgPIY7slzFvMotPv8wjKA.jpg" },
-      { titulo: "Batman: O Cavaleiro das Trevas", img: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
-      { titulo: "Duna", img: "https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg" },
-      { titulo: "Guardiões da Galáxia Vol. 3", img: "https://image.tmdb.org/t/p/w500/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg" },
-      { titulo: "Avatar", img: "https://image.tmdb.org/t/p/w500/tnjUQso1V8EhK7R1d5ekRZRkU3M.jpg" },
-    ];
-
     const catalogo = document.getElementById("catalogo");
     const searchInput = document.getElementById("searchInput");
     const assistirAgoraBtn = document.getElementById("assistirAgoraBtn");
+    let movies = []
 
     function renderFilmes(lista) {
       catalogo.innerHTML = "";
-      lista.forEach(filme => {
+      lista.forEach(item => {
         const div = document.createElement("div");
         div.classList.add("poster");
         div.innerHTML = `
-          <img src="${filme.img}" alt="${filme.titulo}">
-          <h4>${filme.titulo}</h4>
+          <img src="${item.posterURLs.original}" alt="${item.title}">
+          <h4>${item.title}</h4>
         `;
+        div.addEventListener('click', () => getStreamingAvailability(`${item.type}/${item.tmdbId}`))
         catalogo.appendChild(div);
       });
     }
 
-    // Exibir todos ao carregar
-    renderFilmes(filmes);
+    fetch('movies.json')
+      .then(response => response.json())
+      .then(data => {
+        movies = data;
+        renderFilmes(movies);
+      });
 
-    // Filtrar conforme o usuário digita
     searchInput.addEventListener("input", e => {
       const termo = e.target.value.toLowerCase();
-      const filtrados = filmes.filter(f =>
-        f.titulo.toLowerCase().includes(termo)
+      const filtrados = movies.filter(f =>
+        f.title.toLowerCase().includes(termo)
       );
       renderFilmes(filtrados);
     });
 
     assistirAgoraBtn.addEventListener("click", () => {
-      // Exemplo com o ID de "Vingadores: Guerra Infinita" (movie/299536)
       getStreamingAvailability('movie/299536');
     });
 
