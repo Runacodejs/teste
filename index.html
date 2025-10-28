@@ -1,97 +1,198 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Site de Filmes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        form {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-        }
-        input[type="submit"] {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-        li {
-            background-color: #f9f9f9;
-            padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineFlix - Seu Catálogo de Filmes</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #141414;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      background-color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      color: #e50914;
+      margin: 0;
+      font-size: 28px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+    }
+
+    .banner {
+      background-image: url('https://image.tmdb.org/t/p/original/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 40px;
+    }
+
+    .banner h2 {
+      font-size: 48px;
+      margin: 0;
+      max-width: 600px;
+    }
+
+    .banner p {
+      font-size: 18px;
+      max-width: 500px;
+      margin-top: 10px;
+      color: #ddd;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 25px;
+      background-color: #e50914;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #f40612;
+    }
+
+    .row {
+      margin: 30px 0;
+      padding: 0 40px;
+    }
+
+    .row h3 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .row__posters {
+      display: flex;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      padding-bottom: 10px;
+      scroll-behavior: smooth;
+    }
+
+    .row__posters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .row__poster {
+      max-height: 200px;
+      object-fit: cover;
+      margin-right: 10px;
+      transition: transform 0.3s;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .row__poster:hover {
+      transform: scale(1.1);
+    }
+
+    footer {
+      background-color: #111;
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Meu Site de Filmes</h1>
-        
-        <!-- Formulário para adicionar novo filme -->
-        <form id="filme-form">
-            <input type="text" id="filme-input" placeholder="Digite o nome do filme" required>
-            <input type="submit" value="Adicionar">
-        </form>
+  <header>
+    <h1>CineFlix</h1>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Filmes</a>
+      <a href="#">Séries</a>
+      <a href="#">Minha Lista</a>
+    </nav>
+  </header>
 
-        <!-- Lista de filmes adicionados -->
-        <ul id="filme-list"></ul>
-    </div>
+  <section class="banner">
+    <h2>Vingadores: Guerra Infinita</h2>
+    <p>Os Vingadores se unem para enfrentar Thanos, o maior vilão do universo.</p>
+    <button class="btn">Assistir Agora</button>
+  </section>
 
-    <script>
-        // Função para adicionar um filme à lista
-        function adicionarFilme(event) {
-            event.preventDefault(); // Evita recarregar a página ao enviar o formulário
+  <div class="row">
+    <h3>Populares</h3>
+    <div class="row__posters" id="populares"></div>
+  </div>
 
-            // Pega o valor digitado no input
-            const filmeInput = document.getElementById('filme-input');
-            const filmeNome = filmeInput.value;
+  <div class="row">
+    <h3>Em Alta</h3>
+    <div class="row__posters" id="emAlta"></div>
+  </div>
 
-            // Cria um novo item de lista com o nome do filme
-            const li = document.createElement('li');
-            li.textContent = filmeNome;
+  <div class="row">
+    <h3>Para Você</h3>
+    <div class="row__posters" id="paraVoce"></div>
+  </div>
 
-            // Adiciona o novo item à lista de filmes
-            const filmeList = document.getElementById('filme-list');
-            filmeList.appendChild(li);
+  <footer>
+    © 2025 CineFlix — Desenvolvido por Você 🎬
+  </footer>
 
-            // Limpa o input após adicionar o filme
-            filmeInput.value = '';
-        }
+  <script>
+    const filmesPopulares = [
+      "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
+      "https://image.tmdb.org/t/p/w500/aOiL1y03ZL0pQzGwdr7E52S4kvc.jpg",
+      "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
+      "https://image.tmdb.org/t/p/w500/gh4cZbhZxyTbgxQPxD0dOudNPTn.jpg",
+      "https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg",
+      "https://image.tmdb.org/t/p/w500/6ELCZlTA5lGUops70hKdB83WJxH.jpg"
+    ];
 
-        // Evento de submissão do formulário
-        const form = document.getElementById('filme-form');
-        form.addEventListener('submit', adicionarFilme);
-    </script>
+    const filmesEmAlta = [
+      "https://image.tmdb.org/t/p/w500/abPzFdlRhv0ZzjOOk8drtD9BLcG.jpg",
+      "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+      "https://image.tmdb.org/t/p/w500/6o7VFVU39FAqQh1DyoNlx2lxzvN.jpg",
+      "https://image.tmdb.org/t/p/w500/yQwAReLzD7f7z8h0op3nM3fS2ks.jpg"
+    ];
+
+    const filmesParaVoce = [
+      "https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg",
+      "https://image.tmdb.org/t/p/w500/h5UzYZquMwO9FVn15R2eK2itmHu.jpg",
+      "https://image.tmdb.org/t/p/w500/sCbbpo3tXlLJb8I3Ued4zMZkfqd.jpg",
+      "https://image.tmdb.org/t/p/w500/3V7rYmNT7lF7A3B3PLCx7B1tLWy.jpg"
+    ];
+
+    function carregarFilmes(id, lista) {
+      const container = document.getElementById(id);
+      lista.forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.classList.add("row__poster");
+        container.appendChild(img);
+      });
+    }
+
+    carregarFilmes("populares", filmesPopulares);
+    carregarFilmes("emAlta", filmesEmAlta);
+    carregarFilmes("paraVoce", filmesParaVoce);
+  </script>
 </body>
 </html>
